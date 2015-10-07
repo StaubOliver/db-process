@@ -121,7 +121,7 @@ public abstract class DatabaseProcess {
 		private String operator;
 		private int arg2;
 
-		Problem(ResultSet result) throws SQLException {
+		public Problem(ResultSet result) throws SQLException {
 			id = result.getInt(PROBLEM_ID_NAME);
 			arg1 = result.getInt(PROBLEM_ARG1_NAME);
 			arg2 = result.getInt(PROBLEM_ARG2_NAME);
@@ -212,18 +212,24 @@ public abstract class DatabaseProcess {
 			+ ATTEMPTS_ANSWER + " integer NOT NULL";
 
 	public class Attempt {
-		private int person_id;
-		private int problem_id;
-		private int answer;
+		public int person_id;
+		public int problem_id;
+		public int answer;
 
 		private Person person;
 		private Problem problem;
 
-		Attempt(ResultSet result, List<Problem> problems, List<Person> persons) throws SQLException
+		public Attempt(ResultSet result, List<Problem> problems, List<Person> persons) throws SQLException
 		{
 			person_id = result.getInt(ATTEMPTS_PERSON_ID);
 			problem_id = result.getInt(ATTEMPTS_PROBLEM_ID);
 			answer = result.getInt(ATTEMPTS_ANSWER);
+		}
+
+		public Attempt(ResultSet results_attempts) throws  SQLException{
+			person_id = results_attempts.getInt(ATTEMPTS_PERSON_ID);
+			problem_id = results_attempts.getInt(ATTEMPTS_PROBLEM_ID);
+			answer = results_attempts.getInt(ATTEMPTS_ANSWER);
 		}
 	}
 

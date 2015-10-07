@@ -26,7 +26,6 @@ class Q1Process extends DatabaseProcess {
 
 	private static String COUNT_NAME = "N_PROBLEMS";
 
-
 	private static String QUERY_Q1 = "select "+PERSONS_TABLE_NAME+"."+PERSON_LAST_NAME+", "+PERSONS_TABLE_NAME+"."+PERSON_FIRST_NAME+ " , COUNT("+ ATTEMPTS_TABLE_NAME + "."+ATTEMPTS_PROBLEM_ID+") AS "+ COUNT_NAME +
 			" from "+PERSONS_TABLE_NAME+"" +
 			" left join "+ ATTEMPTS_TABLE_NAME + " on "+PERSONS_TABLE_NAME+"."+PERSON_ID_NAME +" = "+ ATTEMPTS_TABLE_NAME + "." + ATTEMPTS_PERSON_ID +
