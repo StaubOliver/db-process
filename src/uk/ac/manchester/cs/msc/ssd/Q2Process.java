@@ -125,10 +125,8 @@ class Q2Process extends DatabaseProcess {
 
 				ResultSet result_problem = database.executeQuery("SELECT * FROM PROBLEMS WHERE PROBLEMS.ID="+a.person_id);
 
-
 				if (result_problem.next()) {
 					Problem p = new Problem(result_problem);
-
 
 					if (right_answer(p,a)){
 						item.n_problems_ans_correctly += 1;
@@ -146,9 +144,6 @@ class Q2Process extends DatabaseProcess {
 						item.p_problems_ans_correctly_from_ans = 0;
 					}
 				}
-
-
-
 			}
 		}
 

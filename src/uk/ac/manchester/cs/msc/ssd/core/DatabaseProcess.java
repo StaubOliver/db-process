@@ -168,9 +168,9 @@ public abstract class DatabaseProcess {
 
 	public class Person {
 
-		private int id;
-		private String first_name;
-		private String last_name;
+		public int id;
+		public String first_name;
+		public String last_name;
 		private String company_name;
 		private String adress;
 		private String city;
@@ -181,7 +181,9 @@ public abstract class DatabaseProcess {
 		private String email;
 		private String web;
 
-		Person(ResultSet result) throws SQLException {
+		public List<Attempt> attempts;
+
+		public Person(ResultSet result) throws SQLException {
 			id = result.getInt(PERSON_ID_NAME);
 			first_name = result.getString(PERSON_FIRST_NAME);
 			last_name = result.getString(PERSON_LAST_NAME);
@@ -193,6 +195,8 @@ public abstract class DatabaseProcess {
 			phone_number2 = result.getString(PERSON_PHONE_NUMBER2);
 			email = result.getString(PERSON_EMAIL);
 			web = result.getString(PERSON_WEB);
+
+			attempts = new ArrayList<Attempt>();
 		}
 	}
 
