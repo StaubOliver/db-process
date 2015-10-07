@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Oct 07 12:34:20 BST 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0150-4214-a32d-00000e622c28 
+on database directory /Users/Olivier/hubiC/Manchester/COMPG60411 Modelling Data on the Web/db-process/DATABASE with class loader sun.misc.Launcher$AppClassLoader@5cad8086 
+Loaded from file:/Users/Olivier/hubiC/Manchester/COMPG60411%20Modelling%20Data%20on%20the%20Web/db-process/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_25-b17
+user.dir=/Users/Olivier/hubiC/Manchester/COMPG60411 Modelling Data on the Web/db-process
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.11
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

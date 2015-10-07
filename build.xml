@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="DB-PROCESS" default="classes" basedir=".">
+
+	<!-- Build script for DB-PROCESS code -->
+	<echo message="OS: ${os.name}"/>
+	<echo message="Java Runtime Environment version: ${java.version}"/>
+
+	<!-- sources -->
+	<property name="in.src" value="src"/>
+	<property name="lib" value="lib"/>
+
+	<!-- build -->
+	<property name="classes" location="classes" />
+
+	<!-- debug property -->
+	<property name="debug" value="true"/>
+
+	<!-- clean -->
+	<target name="clean">
+		<delete dir="${classes}"/>
+	</target>
+
+	<!-- class-path -->
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- output dir structure -->
+	<target name="base">
+		<mkdir dir="${classes}"/>
+	</target>
+
+	<!-- targets -->
+	<target name="classes" depends="base">
+		<javac srcdir="${in.src}" classpathref="classpath" destdir="${classes}" debug="${debug}">
+			<compilerarg value="-Xlint"/>
+		</javac>
+	</target>
+
+</project>

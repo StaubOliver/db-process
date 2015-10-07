@@ -1,0 +1,1 @@
+java -cp classes:lib/*:$JAVA_HOME/db/lib/derby.jar uk.ac.manchester.cs.msc.ssd.Runner
