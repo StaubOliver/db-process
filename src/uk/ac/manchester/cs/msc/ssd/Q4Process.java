@@ -58,22 +58,25 @@ class Q4Process extends DatabaseProcess {
 
 		void print(CSVPrinter printer) throws IOException {
 
-			printer.printRecord(problem_id, n_person_ans, p_person_ans_corr_from_ans, disc);
+			printer.printRecord(problem_id, n_person_ans, Math.round(p_person_ans_corr_from_ans)+"%", disc);
 		}
 	}
 
 	private class Person_with_grade{
 		private Person person;
 		private int grade;
+		private int attempts;
 
 		Person_with_grade(Person p) {
 			this.person = p;
 			this.grade = 0;
+			this.attempts = 0;
 		}
 	}
 
 	List<Q4_result> objects_results = new ArrayList<Q4_result>();
 	List<Person_with_grade> persons = new ArrayList<Person_with_grade>();
+	List<Person_with_grade> persons_who_attempted = new ArrayList<Person_with_grade>();
 	List<Person> good_students = new ArrayList<Person>();
 	List<Person> bottom_students = new ArrayList<Person>();
 
@@ -115,13 +118,13 @@ class Q4Process extends DatabaseProcess {
 
 		for (Q4_result item : objects_results) {
 
-			ResultSet results_attempts = database.executeQuery("SELECT * FROM ATTEMPTS WHERE ATTEMPTS.PROBLEM_ID=" + item.problem_id);
+			ResultSet results_attempts = database.executeQuery("SELECT * FROM "+ATTEMPTS_TABLE_NAME+" WHERE "+ATTEMPTS_TABLE_NAME+"."+ATTEMPTS_PROBLEM_ID+"=" + item.problem_id);
 			List<Attempt> attempts = new ArrayList<Attempt>();
 
 			while (results_attempts.next()) {
 
 				Attempt a = new Attempt(results_attempts);
-				ResultSet result_problem = database.executeQuery("SELECT * FROM PROBLEMS WHERE PROBLEMS.ID=" + item.problem_id);
+				ResultSet result_problem = database.executeQuery("SELECT * FROM "+PROBLEMS_TABLE_NAME+" WHERE "+PROBLEMS_TABLE_NAME+"."+PROBLEM_ID_NAME+"=" + item.problem_id);
 
 				if (result_problem.next())
 				{
@@ -133,6 +136,15 @@ class Q4Process extends DatabaseProcess {
 						for(Person_with_grade pers : persons) {
 							if(pers.person.id == a.person_id) {
 								pers.grade += 1;
+								pers.attempts += 1;
+							}
+						}
+					}
+					else
+					{
+						for(Person_with_grade pers : persons) {
+							if(pers.person.id == a.person_id) {
+								pers.attempts += 1;
 							}
 						}
 					}
@@ -148,8 +160,15 @@ class Q4Process extends DatabaseProcess {
 
 		}
 
+		for (Person_with_grade p : persons)
+		{
+			if (p.attempts != 0)
+			{
+				persons_who_attempted.add(p);
+			}
+		}
 
-		persons.sort(new Comparator<Person_with_grade>(){
+		Collections.sort(persons_who_attempted, new Comparator<Person_with_grade>() {
 			public int compare(Person_with_grade a, Person_with_grade b) {
 				if (a.grade > b.grade) return -1;
 				else if (a.grade < b.grade) return 1;
@@ -158,19 +177,19 @@ class Q4Process extends DatabaseProcess {
 		});
 
 
-		int size = persons.size();
+		int size = persons_who_attempted.size();
 		int end = Math.round((float) size * ((float) 27 / (float) 100));
 
 		for (int i = 0; i < end ; i++)
 		{
-			good_students.add(persons.get(i).person);
+			good_students.add(persons_who_attempted.get(i).person);
 		}
 
 		int start = Math.round((float)size*((float)73/(float)100));
 
 		for (int i = size*(73/100); i < size; i++)
 		{
-			bottom_students.add(persons.get(i).person);
+			bottom_students.add(persons_who_attempted.get(i).person);
 		}
 
 

@@ -50,7 +50,7 @@ class Q3Process extends DatabaseProcess {
 
 		void print(CSVPrinter printer) throws IOException {
 
-			printer.printRecord(problem_id, n_person_ans, p_person_ans_corr_from_ans);
+			printer.printRecord(problem_id, n_person_ans, Math.round(p_person_ans_corr_from_ans)+"%");
 		}
 	}
 
@@ -86,13 +86,13 @@ class Q3Process extends DatabaseProcess {
 
 		for (Q3_result item : objects_results) {
 
-			ResultSet results_attempts = database.executeQuery("SELECT * FROM ATTEMPTS WHERE ATTEMPTS.PROBLEM_ID=" + item.problem_id);
+			ResultSet results_attempts = database.executeQuery("SELECT * FROM "+ATTEMPTS_TABLE_NAME+" WHERE "+ATTEMPTS_TABLE_NAME+"."+ATTEMPTS_PROBLEM_ID+"=" + item.problem_id);
 			List<Attempt> attempts = new ArrayList<Attempt>();
 
 			while (results_attempts.next()) {
 
 				Attempt a = new Attempt(results_attempts);
-				ResultSet result_problem = database.executeQuery("SELECT * FROM PROBLEMS WHERE PROBLEMS.ID=" + item.problem_id);
+				ResultSet result_problem = database.executeQuery("SELECT * FROM "+PROBLEMS_TABLE_NAME+" WHERE "+PROBLEMS_TABLE_NAME+"."+PROBLEM_ID_NAME+"=" + item.problem_id);
 
 				if (result_problem.next())
 				{

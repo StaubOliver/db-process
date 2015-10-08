@@ -73,14 +73,14 @@ class Q5Process extends DatabaseProcess {
 		attemptsInputTable.writeToDatabase(database, ATTEMPTS_TABLE_NAME);
 		System.out.println("Database populated");
 
-		ResultSet persons_results = database.executeQuery("SELECT * FROM PERSONS");
+		ResultSet persons_results = database.executeQuery("SELECT * FROM "+PERSONS_TABLE_NAME);
 		while (persons_results.next())
 		{
 			Person p = new Person(persons_results);
 			persons.add(p);
 		}
 
-		ResultSet answers_results = database.executeQuery("SELECT * FROM ATTEMPTS");
+		ResultSet answers_results = database.executeQuery("SELECT * FROM " + ATTEMPTS_TABLE_NAME);
 		while (answers_results.next()){
 			Attempt a = new Attempt(answers_results);
 			attempts.add(a);

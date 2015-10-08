@@ -36,10 +36,11 @@ class Q2Process extends DatabaseProcess {
 	private int N_PROBLEMS_TOTAL;
 
 
-	private static String QUERY_Q2 = "SELECT PERSONS.PERSON_ID, PERSONS.LAST_NAME, PERSONS.FIRST_NAME, PERSONS.POSTAL, COUNT(DISTINCT ATTEMPTS.PROBLEM_ID) AS "+N_PROBLEMS_ANSWERED_FROM_ALL+//+", COUNT(DISTINCT ATTEMPTS.PROBLEM_ID) / COUNT(DISTINCT PROBLEMS.ID) * 100 AS "+P_PROBLEMS_ANSWERED_FROM_ALL +
-			" FROM  PROBLEMS, PERSONS" +
-			" LEFT JOIN ATTEMPTS ON PERSONS.PERSON_ID = ATTEMPTS.PERSON_ID" +
-			" GROUP BY PERSONS.PERSON_ID, PERSONS.LAST_NAME, PERSONS.FIRST_NAME, PERSONS.POSTAL";
+	private static String QUERY_Q2 = "SELECT "+PERSONS_TABLE_NAME+"."+PERSON_ID_NAME+", "+PERSONS_TABLE_NAME+"." + PERSON_LAST_NAME + ", " +
+			PERSONS_TABLE_NAME + "."+PERSON_FIRST_NAME+", "+PERSONS_TABLE_NAME+"."+PERSON_POSTAL+", COUNT(DISTINCT "+ATTEMPTS_TABLE_NAME+"."+ATTEMPTS_PROBLEM_ID+") AS "+N_PROBLEMS_ANSWERED_FROM_ALL +
+			" FROM  "+PROBLEMS_TABLE_NAME+", " + PERSONS_TABLE_NAME +
+			" LEFT JOIN "+ATTEMPTS_TABLE_NAME+" ON "+PERSONS_TABLE_NAME+"."+PERSON_ID_NAME+" = "+ATTEMPTS_TABLE_NAME+"."+ATTEMPTS_PERSON_ID +
+			" GROUP BY "+PERSONS_TABLE_NAME+"."+PERSON_ID_NAME+", "+PERSONS_TABLE_NAME+"."+ PERSON_LAST_NAME + ", " + PERSONS_TABLE_NAME + "."+PERSON_FIRST_NAME+", "+PERSONS_TABLE_NAME+"."+PERSON_POSTAL;
 
 	private class Q2_result{
 
@@ -67,7 +68,7 @@ class Q2Process extends DatabaseProcess {
 		}
 
 		void print(CSVPrinter printer) throws IOException {
-			printer.printRecord(last_name, first_name, postal, n_problems_ans_from_all, p_problems_ans_from_all+"%", n_problems_ans_correctly, p_problems_ans_correctly_from_ans+"%", p_problems_ans_correctly_from_all+"%");
+			printer.printRecord(last_name, first_name, postal, n_problems_ans_from_all, Math.round(p_problems_ans_from_all)+"%", n_problems_ans_correctly, Math.round(p_problems_ans_correctly_from_ans)+"%", Math.round(p_problems_ans_correctly_from_all)+"%");
 		}
 	}
 
@@ -95,7 +96,7 @@ class Q2Process extends DatabaseProcess {
 		attemptsInputTable.writeToDatabase(database, ATTEMPTS_TABLE_NAME);
 		System.out.println("Database populated");
 
-		ResultSet n_total = database.executeQuery("SELECT COUNT(DISTINCT PROBLEMS."+PROBLEM_ID_NAME+") AS N FROM PROBLEMS");
+		ResultSet n_total = database.executeQuery("SELECT COUNT(DISTINCT "+PROBLEMS_TABLE_NAME+"."+PROBLEM_ID_NAME+") AS N FROM "+ PROBLEMS_TABLE_NAME);
 
 		if (n_total.next()){
 			N_PROBLEMS_TOTAL = n_total.getInt("N");
@@ -117,13 +118,13 @@ class Q2Process extends DatabaseProcess {
 				item.p_problems_ans_from_all = 0;
 			}
 
-			ResultSet results_attempts = database.executeQuery("SELECT * FROM ATTEMPTS WHERE ATTEMPTS.PERSON_ID="+item.person_id);
+			ResultSet results_attempts = database.executeQuery("SELECT * FROM "+ATTEMPTS_TABLE_NAME+" WHERE "+ATTEMPTS_TABLE_NAME+"."+ATTEMPTS_PERSON_ID+"="+item.person_id);
 			List<Attempt> attempts = new ArrayList<Attempt>();
 			while (results_attempts.next())
 			{
 				Attempt a = new Attempt(results_attempts);
 
-				ResultSet result_problem = database.executeQuery("SELECT * FROM PROBLEMS WHERE PROBLEMS.ID="+a.person_id);
+				ResultSet result_problem = database.executeQuery("SELECT * FROM "+PROBLEMS_TABLE_NAME+" WHERE "+PROBLEMS_TABLE_NAME+".ID="+a.person_id);
 
 				if (result_problem.next()) {
 					Problem p = new Problem(result_problem);
@@ -147,7 +148,7 @@ class Q2Process extends DatabaseProcess {
 			}
 		}
 
-		objects_results.sort(new Comparator<Q2_result>(){
+		Collections.sort(objects_results, new Comparator<Q2_result>(){
 			public int compare(Q2_result a, Q2_result b) {
 				int postal_comparison = a.postal.compareTo(b.postal);
 
